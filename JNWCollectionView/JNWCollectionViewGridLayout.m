@@ -155,6 +155,10 @@ static const CGSize JNWCollectionViewGridLayoutDefaultSize = (CGSize){ 44.f, 44.
 		
 		sectionInfo.height = itemSize.height * numberOfRows + verticalSpacing * MAX(numberOfRows - 1, 0);
 		totalHeight += sectionInfo.height + footerHeight + headerHeight + sectionInsets.bottom + sectionInsets.top;
+        
+        if (section == numberOfSections - 1)
+            sectionInfo.height += sectionInsets.bottom;
+        
 		[self.sections addObject:sectionInfo];
 	}
 }
@@ -189,8 +193,8 @@ static const CGSize JNWCollectionViewGridLayoutDefaultSize = (CGSize){ 44.f, 44.
 
 - (CGRect)rectForSectionAtIndex:(NSInteger)index {
 	JNWCollectionViewGridLayoutSection *section = self.sections[index];
-	CGFloat height = section.height + section.headerHeight + section.footerHeight;
-	return CGRectMake(0, section.offset, self.collectionView.visibleSize.width, height);
+	CGFloat height = section.height + section.offset + section.headerHeight + section.footerHeight;
+	return CGRectMake(0, 0, self.collectionView.visibleSize.width, height);
 }
 
 - (NSArray *)indexPathsForItemsInRect:(CGRect)rect {
