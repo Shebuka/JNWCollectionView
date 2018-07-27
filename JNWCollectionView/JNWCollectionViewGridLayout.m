@@ -110,16 +110,17 @@ static const CGSize JNWCollectionViewGridLayoutDefaultSize = (CGSize){ 44.f, 44.
 	BOOL delegateHeightForFooter = [self.delegate respondsToSelector:@selector(collectionView:heightForFooterInSection:)];
 	BOOL delegateForSectionInsets = [self.delegate respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)];
 
-	CGFloat totalWidth = self.collectionView.visibleSize.width - self.itemHorizontalMargin;
-	NSUInteger numberOfColumns = totalWidth / (itemSize.width + self.itemHorizontalMargin);
+	CGFloat totalWidth = self.collectionView.visibleSize.width;
+	NSUInteger numberOfColumns = (totalWidth - self.itemHorizontalMargin) / (itemSize.width + self.itemHorizontalMargin);
 	NSUInteger numberOfSections = [self.collectionView numberOfSections];
 	CGFloat verticalSpacing = self.verticalSpacing;
 	
 	self.itemPadding = 0;
 	if (numberOfColumns > 0) {
-		if (self.itemHorizontalMargin == 0 && self.itemPaddingEnabled) {
+		if (self.itemPaddingEnabled) {
 			CGFloat totalPadding = totalWidth - (numberOfColumns * itemSize.width);
-			self.itemPadding = floorf(totalPadding / (numberOfColumns + 1));
+            CGFloat itemPadding = totalPadding / (numberOfColumns + 1);
+            self.itemPadding = MAX(itemPadding, self.itemHorizontalMargin);
         } else {
             self.itemPadding = self.itemHorizontalMargin;
         }
